@@ -1,9 +1,19 @@
-import React from 'react'
+import React from "react";
 
-const NewNote = () => {
+import NoteForm from "./NoteForm";
+
+const NewNote = ({ onSubmit, onAddTag, availableTags }) => {
+
   return (
-    <div>NewNote</div>
-  )
-}
+    <div>
+      <h1 className="mb-4">New Note</h1>
+      <NoteForm
+        onSubmit={onSubmit}
+        onAddTag={onAddTag}
+        availableTags={availableTags}
+      />
+    </div>
+  );
+};
 
-export default NewNote
+export default NewNote;
