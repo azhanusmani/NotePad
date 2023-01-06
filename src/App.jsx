@@ -48,12 +48,30 @@ function App() {
   function updateTag(id, label) {
     setTags((prevTags) => {
       return prevTags.map((tag) => {
-        if (tag.id === id) {
-          return { ...tag, label };
-        } else {
+        if (tag.id !== id) {
           return tag;
+        } else {
+          return { ...tag, label };
         }
       });
+    });
+  }
+
+  function onUpdateNote(id, { tags, ...data }) {
+    setNotes((prevNotes) => {
+      return prevNotes.map((note) => {
+        if (note.id !== id) {
+          return note;
+        } else {
+          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
+        }
+      });
+    });
+  }
+
+  function onDeleteNote(id) {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((note) => note.id !== id);
     });
   }
 
@@ -83,9 +101,18 @@ function App() {
           }
         />
 
-        <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
-          <Route index element={<Note />} />
-          <Route path="edit" element={<EditNote />} />
+        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+          <Route index element={<Note onDelete={onDeleteNote} />} />
+          <Route
+            path="edit"
+            element={
+              <EditNote
+                onSubmit={onUpdateNote}
+                onAddTag={addTag}
+                availableTags={tags}
+              />
+            }
+          />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
